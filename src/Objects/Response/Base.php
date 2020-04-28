@@ -58,7 +58,11 @@ abstract class Base implements Response
                 break;
 
             default:
-                throw new UnsuccessfulResponse(isset($response->error_code) ? $response->error_code : 500);
+                throw new UnsuccessfulResponse(
+                    $response,
+                    isset($response->error_code) ? $response->error_code : 500
+                );
+
                 break;
         }
     }

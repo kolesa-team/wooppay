@@ -46,9 +46,10 @@ class Client extends \SoapClient
     /**
      * Logs user in.
      *
-     * @param  string                          $username
-     * @param  string                          $password
+     * @param  string                                $username
+     * @param  string                                $password
      * @return \Wooppay\Objects\Response\Login
+     * @throws \Wooppay\Objects\Exceptions\Exception
      */
     public function login($username, $password)
     {
@@ -95,6 +96,7 @@ class Client extends \SoapClient
      * @param  string                                          $userEmail
      * @param  string                                          $userPhone
      * @return \Wooppay\Objects\Response\CreateInvoiceExtended
+     * @throws \Wooppay\Objects\Exceptions\Exception
      */
     public function createInvoiceExtended(
         $referenceId,
