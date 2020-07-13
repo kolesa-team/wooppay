@@ -31,6 +31,13 @@ class Client extends \SoapClient
     ];
 
     /**
+     * A flag indicating whether a client has logged in
+     *
+     * @var bool
+     */
+    protected $isLoggedIn = false;
+
+    /**
      * Client constructor.
      *
      * @param string $wsdl
@@ -60,8 +67,19 @@ class Client extends \SoapClient
         $response = Response\Login::factory($result);
 
         $this->__setCookie('session', $response->getSession());
+        $this->isLoggedIn = true;
 
         return $response;
+    }
+
+    /**
+     * Returns a flag indicating whether a client has logged in
+     *
+     * @return bool
+     */
+    public function isLoggedIn()
+    {
+        return $this->isLoggedIn;
     }
 
     /**
