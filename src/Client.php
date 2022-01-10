@@ -51,6 +51,24 @@ class Client extends \SoapClient
     }
 
     /**
+     * Calls a SOAP function
+     *
+     * @param string $name
+     * @param array  $args
+     * @param array  $options
+     * @param mixed  $inputHeaders
+     * @param array  $outputHeaders
+     * @return mixed
+     */
+    public function __soapCall($name, array $args, $options = null, $inputHeaders = null, &$outputHeaders = null)
+    {
+        $result = parent::__soapCall($name, $args, $options, $inputHeaders,$outputHeaders);
+        $result->raw_result = $this->__getLastResponse();
+
+        return $result;
+    }
+
+    /**
      * Logs user in.
      *
      * @param  string                                $username
