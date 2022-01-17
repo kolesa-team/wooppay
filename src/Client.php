@@ -60,7 +60,7 @@ class Client extends \SoapClient
      * @param array  $outputHeaders
      * @return mixed
      */
-    public function __soapCall($name, array $args, $options = null, $inputHeaders = null, &$outputHeaders = null)
+    public function __soapCall($name, $args, $options = null, $inputHeaders = null, &$outputHeaders = null)
     {
         $result = parent::__soapCall($name, $args, $options, $inputHeaders,$outputHeaders);
         $result->raw_result = $this->__getLastResponse();
