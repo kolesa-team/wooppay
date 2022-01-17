@@ -19,5 +19,4 @@ Wooppay SOAP client
     if ($status && $status->getStatus() == \Wooppay\Objects\Response\GetOperationData::STATUS_DONE) {
         echo "Operation successfully completed.";
     }
-    
-1
+
