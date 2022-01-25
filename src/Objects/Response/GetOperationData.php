@@ -44,6 +44,11 @@ class GetOperationData extends Base
     const STATUS_CANCELING = 6;
 
     /**
+     * Payment pending (will soon change to DONE).
+     */
+    const STATUS_PENDING = 9;
+
+    /**
      * Operation id.
      *
      * @var integer
@@ -369,8 +374,18 @@ class GetOperationData extends Base
     public function setToFullName($toFullName)
     {
         $this->toFullName = $toFullName;
-        
+
         return $this;
+    }
+
+    /**
+     * Returns true if the payment is complete
+     *
+     * @return bool
+     */
+    public function isOk()
+    {
+        return $this->status === self::STATUS_DONE || $this->status === self::STATUS_PENDING;
     }
 
     /**
