@@ -49,6 +49,20 @@ class GetOperationData extends Base
     const STATUS_PENDING = 9;
 
     /**
+     * Payment pending version 2 (will soon change to DONE).
+     */
+    const STATUS_PENDING_V2 = 19;
+
+    /**
+     * All valid statuses
+     */
+    const VALID_STATUSES = [
+        self::STATUS_DONE,
+        self::STATUS_PENDING,
+        self::STATUS_PENDING_V2,
+    ];
+
+    /**
      * Operation id.
      *
      * @var integer
@@ -385,7 +399,7 @@ class GetOperationData extends Base
      */
     public function isOk()
     {
-        return $this->status === self::STATUS_DONE || $this->status === self::STATUS_PENDING;
+        return in_array($this->status,self::VALID_STATUSES);
     }
 
     /**
