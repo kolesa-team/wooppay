@@ -8,6 +8,7 @@
  */
 namespace Wooppay;
 
+use Psr\Log\LoggerInterface;
 use Wooppay\Objects\Request;
 use Wooppay\Objects\Response;
 
@@ -38,16 +39,31 @@ class Client extends \SoapClient
     protected $isLoggedIn = false;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var bool
+     */
+    protected $logResponse = false;
+
+    /**
      * Client constructor.
      *
-     * @param string $wsdl
-     * @param array  $options
+     * @param  null                          $wsdl
+     * @param  array                         $options
+     * @param  \Psr\Log\LoggerInterface|null $logger
+     * @throws \SoapFault
      */
-    public function __construct($wsdl = null, array $options = [])
+    public function __construct($wsdl = null, array $options = [], ?LoggerInterface $logger = null)
     {
         $options = array_merge($this->defaults, $options);
 
         parent::__construct($wsdl, $options);
+
+        $this->logger      = $logger;
+        $this->logResponse = !empty($options['logResponse']);
     }
 
     /**
@@ -114,6 +130,8 @@ class Client extends \SoapClient
             ->setPhone($phone);
         $result  = $this->__soapCall('core_requestConfirmationCode', [$request]);
 
+        $this->logResponse('core_requestConfirmationCode', $result);
+
         return Response\Base::checkResponse($result);
     }
 
@@ -161,6 +179,8 @@ class Client extends \SoapClient
             ->setUserPhone($userPhone);
 
         $result = $this->__soapCall('cash_createInvoiceExtended', [$request]);
+
+        $this->logResponse('cash_createInvoiceExtended', $result);
 
         return Response\CreateInvoiceExtended::factory($result);
     }
@@ -212,6 +232,8 @@ class Client extends \SoapClient
 
         $result = $this->__soapCall('cash_createInvoiceByService', [$request]);
 
+        $this->logResponse('cash_createInvoiceByService', $result);
+
         return Response\CreateInvoiceExtended::factory($result);
     }
 
@@ -228,6 +250,26 @@ class Client extends \SoapClient
 
         $result = $this->__soapCall('cash_getOperationData', [$request]);
 
+        $this->logResponse('cash_getOperationData', $result);
+
         return Response\GetOperationData::factory($result);
+    }
+
+    /**
+     * Log result
+     *
+     * @param string $operation
+     * @param mixed  $response
+     */
+    protected function logResponse(string $operation, $response)
+    {
+        if ($this->logResponse && $this->logger) {
+            $this->logger->info(
+                sprintf('[WooppayClient.%s] Wooppay response for operation', $operation),
+                [
+                    'rawResponseData' => $response,
+                ]
+            );
+        }
     }
 }
